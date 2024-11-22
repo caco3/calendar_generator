@@ -1,1 +1,4 @@
 matplotlib
+PyPDF2
+setuptools
+python-dateutil
