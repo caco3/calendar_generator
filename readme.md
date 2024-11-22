@@ -1,9 +1,8 @@
 # Calendar Generator
 This script can be used to generate a calendar pdf with one A4 page per month.
 Each page has half the page empty so you can add photo or your kids can draw something:
+
 [![calendar](resized_calendar.png)](calendar.png)
-
-
 
 To use it, simply call the script and add the year as a parameter:
 ```bash
