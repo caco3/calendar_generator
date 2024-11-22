@@ -14,4 +14,6 @@ The initial script to generate a months page was written by [Peter Wilson](https
 
 I ([George Ruinelli](https://github.com/caco3)) extended it to add the photo section and generate a full calendar.
 
-# Notes 
+# Notes
+- To change the language of the months and days, use the parameter `--locale`, eg. `--locale de_DE`
+- The script contains some swiss and christian events. Adapt them as you need.
