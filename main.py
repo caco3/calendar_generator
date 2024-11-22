@@ -208,8 +208,7 @@ if __name__ == "__main__":
     ]
 
     pdfWriter = PyPDF2.PdfWriter()
-    #for month in range(1, 13):
-    for month in range(1, 2):
+    for month in range(1, 13):
         logging.info(f"Generating page for '{month_name[month]} {year}'...")
         month_page = MplCalendar(year, month)
 
