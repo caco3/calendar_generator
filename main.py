@@ -63,10 +63,9 @@ class MplCalendar(object):
         plot_defaults = dict(
             sharex=True,
             sharey=True,
-            figsize=(21 * cm, 29.7 * cm),
+            figsize=((21 + 2.5) * cm, (29.7 + 1.4) * cm),  # Leads to a pdf with 21.0 × 29.7 cm
             dpi=600,
         )
-
 
         plot_defaults.update(kwargs)
         self.f, self.axs = plt.subplots(
@@ -108,9 +107,18 @@ class MplCalendar(object):
         # Place subplots in a close grid
         self.f.subplots_adjust(hspace=0)
         self.f.subplots_adjust(wspace=0)
-        self.f.subplots_adjust(top=0.45)
-        self.f.suptitle(month_name[self.month] + ' ' + str(self.year),
-                   fontsize=40, color="white", fontweight='bold',
+        self.f.subplots_adjust(top=0.43)
+
+        # Add the title
+        # Note that we can not shift the suptitle as it would change the plt's size.
+        # Thus we keep an invisible suptitle and add the title as an additional text
+        #self.f.suptitle(month_name[self.month] + ' ' + str(self.year),fontsize=40, color="white", fontweight='bold',
+        #           path_effects=[patheffects.withStroke(linewidth=8, foreground='red', capstyle="round")])
+        self.f.suptitle(" ")
+        plt.title(month_name[self.month] + ' ' + str(self.year),
+                   fontsize=40, color="white", fontweight='bold', x=-2.61, y=13.2,
+                            verticalalignment='top',
+                            horizontalalignment='center',
                    path_effects=[patheffects.withStroke(linewidth=8, foreground='black', capstyle="round")])
 
     def show(self, **kwargs):
@@ -131,9 +139,9 @@ class MplCalendar(object):
         if len(self.axs) == 6:  # February fits on only 4 rows
             h += 1.2
 
-        plt.gca().add_patch(Rectangle((-5.95, h - 0.25), 7, h + 0.1,
+        plt.gca().add_patch(Rectangle((-5.95, h - 0.25), 7, h + 0.5,
                 edgecolor='gray', facecolor='gray', lw=1, clip_on=False))
-        plt.gca().add_patch(Rectangle((-6, h - 0.2), 7, h + 0.1,
+        plt.gca().add_patch(Rectangle((-6, h - 0.2), 7, h + 0.5,
                 edgecolor='black', facecolor='white', lw=1, clip_on=False))
 
         plt.savefig(filename, format='pdf', bbox_inches='tight', pad_inches=.5)
@@ -163,19 +171,19 @@ if __name__ == "__main__":
     """Events which are on the same day each year"""
     fix_events = [
         # Christian events (the fixed ones)
-        Event("Berchtoldtag", 1, 2, "lightcoral"),
-        Event("Drei Könige", 1, 6, "white"),
-        Event("Heiligabend", 12, 24, "white"),
-        Event("Weihnachten", 12, 25, "lightcoral"),
-        Event("Stephanstag", 12,26 , "lightcoral"),
+        Event("Berchtoldtag", 1, 2, "mistyrose"),
+        Event("Drei Könige", 1, 6, None),
+        Event("Heiligabend", 12, 24, None),
+        Event("Weihnachten", 12, 25, "mistyrose"),
+        Event("Stephanstag", 12,26 , "mistyrose"),
 
         # Secular events
-        Event("Neujahrstag", 1, 1, "lightcoral"),
-        Event("Silvester", 12, 31, "lightcoral"),
+        Event("Neujahrstag", 1, 1, "mistyrose"),
+        Event("Silvester", 12, 31, "mistyrose"),
 
         # Swiss events
-        Event("Tag der\nArbeit", 5, 1, "lightcoral"),
-        Event("Bundes-\nfeiertag", 8, 1, "lightcoral")
+        Event("Tag der\nArbeit", 5, 1, "mistyrose"),
+        Event("Bundes-\nfeiertag", 8, 1, "mistyrose")
     ]
 
     """Events which are on a different date each year"""
@@ -190,17 +198,18 @@ if __name__ == "__main__":
 
     flexible_events = [
         Event("Grün-\ndonnerstag", holy_thuersday.month, holy_thuersday.day, "white"),
-        Event("Karfreitag",good_friday.month,good_friday.day, "lightcoral"),
-        Event("Oster-\nsonntag", easter_sunday.month, easter_sunday.day, "lightcoral"),
-        Event("Ostermontag", easter_monday.month, easter_monday.day, "lightcoral"),
+        Event("Karfreitag",good_friday.month,good_friday.day, "mistyrose"),
+        Event("Oster-\nsonntag", easter_sunday.month, easter_sunday.day, "mistyrose"),
+        Event("Ostermontag", easter_monday.month, easter_monday.day, "mistyrose"),
 
-        Event("Auffahrt", ascension.month, ascension.day, "lightcoral"),
-        Event("Pfingsten", pentecost.month, pentecost.day, "lightcoral"),
-        Event("Pfingst-\nmontag", whit_monday.month, whit_monday.day, "lightcoral")
+        Event("Auffahrt", ascension.month, ascension.day, "mistyrose"),
+        Event("Pfingsten", pentecost.month, pentecost.day, "mistyrose"),
+        Event("Pfingst-\nmontag", whit_monday.month, whit_monday.day, "mistyrose")
     ]
 
     pdfWriter = PyPDF2.PdfWriter()
-    for month in range(1, 13):
+    #for month in range(1, 13):
+    for month in range(1, 2):
         logging.info(f"Generating page for '{month_name[month]} {year}'...")
         month_page = MplCalendar(year, month)
 
@@ -208,7 +217,7 @@ if __name__ == "__main__":
             try:
                 weekday = datetime.datetime(year, month, day).weekday()
                 if weekday >= 5:  # Highlight saturday and sunday
-                    month_page.color_day(day, "#ffffb4")
+                    month_page.color_day(day, "lemonchiffon")
             except:  # day is beyond days in month
                 pass
 
@@ -216,12 +225,14 @@ if __name__ == "__main__":
         for e in fix_events:
             if month == e.month:
                 month_page.add_event(e.day, e.name)
-                month_page.color_day(e.day, e.color)
+                if e.color is not None:
+                    month_page.color_day(e.day, e.color)
 
         for e in flexible_events:
             if month == e.month:
                 month_page.add_event(e.day, e.name)
-                month_page.color_day(e.day, e.color)
+                if e.color is not None:
+                    month_page.color_day(e.day, e.color)
 
         month_page.save(f"{month:02}.pdf")
 
