@@ -56,6 +56,7 @@ class MplCalendar(object):
         week, w_day = self._monthday_to_index(day)
         self.colors[week][w_day] = color
         
+
     def _render(self, **kwargs):
         'create the calendar figure'
         cm = 1 / 2.54  # centimeters in inches
@@ -118,20 +119,21 @@ class MplCalendar(object):
 
         plt.show()
 
+
     def save(self, filename, **kwargs):
         'save the calendar to the specified image file.'
         self._render(**kwargs)
 
         # Photo box
         h = 6
-        if len(self.axs) == 4:  # February fits on only 4 rows
+        if len(self.axs) == 4:  # Month with 4 rows
             h -= 1.2
-        if len(self.axs) == 6:  # February fits on only 4 rows
+        if len(self.axs) == 6:  # Month with 6 rows
             h += 1.2
 
-        plt.gca().add_patch(Rectangle((-5.95, h - 0.25), 7, h + 0.5,
+        plt.gca().add_patch(Rectangle((-5.95, h - 0.25), 7, h + 0.8,
                 edgecolor='gray', facecolor='gray', lw=1, clip_on=False))
-        plt.gca().add_patch(Rectangle((-6, h - 0.2), 7, h + 0.5,
+        plt.gca().add_patch(Rectangle((-6, h - 0.2), 7, h + 0.8,
                 edgecolor='black', facecolor='white', lw=1, clip_on=False))
 
         plt.savefig(filename, format='pdf', bbox_inches='tight', pad_inches=.5)
