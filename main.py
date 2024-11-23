@@ -56,7 +56,6 @@ class MplCalendar(object):
         week, w_day = self._monthday_to_index(day)
         self.colors[week][w_day] = color
         
-
     def _render(self, **kwargs):
         'create the calendar figure'
         cm = 1 / 2.54  # centimeters in inches
@@ -110,15 +109,7 @@ class MplCalendar(object):
         self.f.subplots_adjust(top=0.43)
 
         # Add the title
-        # Note that we can not shift the suptitle as it would change the plt's size.
-        # Thus we keep an invisible suptitle and add the title as an additional text
-        #self.f.suptitle(month_name[self.month] + ' ' + str(self.year),fontsize=40, color="white", fontweight='bold',
-        #           path_effects=[patheffects.withStroke(linewidth=8, foreground='red', capstyle="round")])
-        self.f.suptitle(" ")
-        plt.title(month_name[self.month] + ' ' + str(self.year),
-                   fontsize=40, color="white", fontweight='bold', x=-2.61, y=13.2,
-                            verticalalignment='top',
-                            horizontalalignment='center',
+        self.f.suptitle(month_name[self.month] + ' ' + str(self.year),fontsize=40, color="white", fontweight='bold',
                    path_effects=[patheffects.withStroke(linewidth=8, foreground='black', capstyle="round")])
 
     def show(self, **kwargs):
@@ -126,7 +117,6 @@ class MplCalendar(object):
         self._render(**kwargs)
 
         plt.show()
-
 
     def save(self, filename, **kwargs):
         'save the calendar to the specified image file.'
