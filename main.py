@@ -80,23 +80,27 @@ class MplCalendar(object):
                 if self.colors[week][week_day] is not None:
                     ax.set_facecolor(self.colors[week][week_day])
                 if self.cal[week][week_day] != 0:
-                    ax.text(.08, .92,
+                    ax.text(.08, .90,
                             str(self.cal[week][week_day]),
                             verticalalignment='top',
-                            horizontalalignment='left')
+                            horizontalalignment='left',
+                            fontsize=12)
                 else: # Square is not part of this month
                     ax.set_facecolor("lightgray")
+
                 contents = "\n".join(self.events[week][week_day])
-                ax.text(.08, .7, contents,
+                ax.text(.08, .60, contents,
                         verticalalignment='top',
                         horizontalalignment='left',
                         fontsize=9)
 
-                if week_day == 6:
-                    ax.add_patch(Rectangle((1, -0.05), 0.05, 1,
+                if week_day == 6:  # Shadow on right side
+                    offset = 0.05
+                    ax.add_patch(Rectangle((1, - offset), offset, 1,
                                               edgecolor='gray', facecolor='gray', lw=1, clip_on=False))
-                if week == len(self.axs) - 1:
-                    ax.add_patch(Rectangle((0.05, -0.05), 1, 0.05,
+                if week == len(self.axs) - 1:  # Shadow on bottom
+                    offset = 0.08
+                    ax.add_patch(Rectangle((0.05, - offset), 1, offset,
                                                   edgecolor='gray', facecolor='gray', lw=1, clip_on=False))
 
         # use the titles of the first row as the weekdays
@@ -108,9 +112,10 @@ class MplCalendar(object):
         self.f.subplots_adjust(hspace=0)
         self.f.subplots_adjust(wspace=0)
         self.f.subplots_adjust(top=0.43)
+        self.f.subplots_adjust(top=0.38)
 
         # Add the title
-        self.f.suptitle(month_name[self.month] + ' ' + str(self.year),fontsize=40, color="white", fontweight='bold',
+        self.f.suptitle("\n" + month_name[self. month] + ' ' + str(self.year),fontsize=40, color="white", fontweight='bold',
                    path_effects=[patheffects.withStroke(linewidth=8, foreground='black', capstyle="round")])
 
     def show(self, **kwargs):
@@ -125,15 +130,19 @@ class MplCalendar(object):
         self._render(**kwargs)
 
         # Photo box
-        h = 6
         if len(self.axs) == 4:  # Month with 4 rows
-            h -= 1.2
-        if len(self.axs) == 6:  # Month with 6 rows
-            h += 1.2
+            y = 4.8
+            h = 4.35
+        elif len(self.axs) == 5:  # Month with 5 rows
+            y = 6
+            h = 6
+        elif len(self.axs) == 6:  # Month with 6 rows
+            y = 7.2
+            h = 7.6
 
-        plt.gca().add_patch(Rectangle((-5.95, h - 0.25), 7, h + 0.8,
+        plt.gca().add_patch(Rectangle((-5.95, y - 0.1), 7, h + 2.2,  # Shadow
                 edgecolor='gray', facecolor='gray', lw=1, clip_on=False))
-        plt.gca().add_patch(Rectangle((-6, h - 0.2), 7, h + 0.8,
+        plt.gca().add_patch(Rectangle((-6, y), 7, h + 2.2,  # Box
                 edgecolor='black', facecolor='white', lw=1, clip_on=False))
 
         plt.savefig(filename, format='pdf', bbox_inches='tight', pad_inches=.5)
